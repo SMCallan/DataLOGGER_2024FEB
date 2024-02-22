@@ -54,12 +54,17 @@ Before you begin, ensure you have the following:
 
 ## Project Structure
 
-- `main.py`: The main script that initializes the GUI and starts the sensor monitoring and data logging.
-- `gui_manager.py`: Manages the graphical user interface where sensor data is displayed.
-- `sensor_manager.py`: Handles the reading of sensor data from the GPIO pins or ADC.
-- `data_logger.py`: Manages logging of sensor data to a file.
-- `alarm_manager.py`: Checks sensor data against predefined thresholds to trigger alarms.
-- `config.py`: Contains configuration settings for the project.
+- `main.py`: The main script that initializes the GUI and starts the sensor monitoring and data logging. It sets up the sensor manager, data logger, alarm manager, and GUI manager. It also starts a separate thread for automatic data logging.
+
+- `config.py`: This file contains the configuration for your sensor system, including the mapping of sensors to their respective channels or pins, and settings for data logging and GUI update intervals.
+
+- `gui_manager.py`: This file defines the `GUIManager` class, which manages the graphical user interface for your application. It reads sensor data, updates the sensor data plot, and redraws the canvas.
+
+- `data_logger.py`: This file defines the `DataLogger` class, which logs sensor data to a CSV file.
+
+- `alarm_manager.py`: This class is responsible for checking alarms based on sensor data. It checks for over-threshold values and increasing trends in the sensor data. If any of these conditions are met, it adds an alarm message to the list of alarms, which it then returns.
+
+- `sensor_manager.py`: This class manages the sensors in your system. It initializes the ADC device for reading analog sensors and sets up the GPIO mode for digital sensor pins. It also loads sensor configurations from the settings in `config.py`. The `read_sensor` method reads and returns data from a specified sensor, and the `get_sensor_ids` method returns a list of all configured sensor IDs.
 
 ## Running the Project
 
