@@ -12,8 +12,8 @@ class GUIManager:
         self.plot = self.figure.add_subplot(111)
         self.canvas = FigureCanvasTkAgg(self.figure, master=self.root)
         self.sensor_data = {sensor_id: [] for sensor_id in sensor_manager.get_sensor_ids()}
+        self.auto_update_interval = 1000  # Define auto_update_interval here
         self.setup_ui()
-        self.auto_update_interval = 1000  # Interval in milliseconds
 
     def start_auto_update(self):
         self.update_sensor_readings()  # Update the sensor readings
