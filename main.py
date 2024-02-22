@@ -16,7 +16,7 @@ def main():
     root = tk.Tk()
     sensor_manager = SensorManager()
     data_logger = DataLogger()
-    alarm_manager = AlarmManager(sensor_manager=sensor_manager)  # Assuming it might need sensor_manager for conditions
+    alarm_manager = AlarmManager()  # Assuming it might need sensor_manager for conditions
     gui_manager = GUIManager(root, sensor_manager, data_logger, alarm_manager)
     
     data_logging_thread = threading.Thread(target=automatic_data_logging, args=(sensor_manager, data_logger), daemon=True)
