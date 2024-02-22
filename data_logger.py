@@ -7,4 +7,6 @@ class DataLogger:
         filename = datetime.now().strftime("%Y-%m-%d") + ".csv"
         with open(filename, 'a', newline='') as file:
             writer = csv.writer(file)
-            writer.writerow([datetime.now().strftime("%H:%M:%S")] + sensor_data)
+            # Assuming you want to log the timestamp, sensor IDs, and their readings
+            row = [datetime.now().strftime("%H:%M:%S")] + [sensor_id for sensor_id in sensor_data] + [sensor_data[sensor_id] for sensor_id in sensor_data]
+            writer.writerow(row)
