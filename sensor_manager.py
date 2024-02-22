@@ -32,3 +32,13 @@ class SensorManager:
     def get_sensor_ids(self):
         # Return a list of all configured sensor IDs
         return list(self.sensor_mapping.keys())
+
+# Test code
+if __name__ == "__main__":
+    sensor_manager = SensorManager()  # Initialize SensorManager
+    sensor_ids = sensor_manager.get_sensor_ids()  # Get all sensor IDs
+
+    print("Testing sensor readings...")
+    for sensor_id in sensor_ids:  # Correct variable name here
+        reading = sensor_manager.read_sensor(sensor_id)  # Use sensor_id, not sensor_ids
+        print(f"Sensor {sensor_id}: {reading}")
