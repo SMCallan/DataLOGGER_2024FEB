@@ -11,11 +11,11 @@ from data_logger import DataLogger
 from alarm_manager import AlarmManager
 
 class GUIManager:
-    def __init__(self, root):
+    def __init__(self, root, sensor_manager, data_logger, alarm_manager):
         self.root = root
-        self.sensor_manager = SensorManager()
-        self.data_logger = DataLogger()
-        self.alarm_manager = AlarmManager()
+        self.sensor_manager = sensor_manager
+        self.data_logger = data_logger
+        self.alarm_manager = alarm_manager
 
         self.setup_ui()
 
