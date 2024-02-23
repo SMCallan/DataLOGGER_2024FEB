@@ -63,32 +63,41 @@ class GUIManager:
     def update_sensor_readings(self):
         """
         Fetches the latest sensor readings, updates the live reading labels,
-        and triggers an update of the sensor data plots.
+        and appends the new readings to self.sensor_data for plotting.
         """
-        # Fetch and display the latest readings for each sensor.
-        for sensor_id in ["CO", "O2", "Dust"]:
-            reading = self.sensor_manager.read_sensor(sensor_id)
+        window_size = 50  # Keep the last 50 readings for plotting
+        for sensor_id in ['CO', 'O2', 'Dust']:
+            reading = self.sensor_manager.read_sensor(sensor_id)  # Fetch new reading
+            self.sensor_data[sensor_id].append(reading)  # Append new reading
+            # Remove the oldest reading if exceeding window size
+            if len(self.sensor_data[sensor_id]) > window_size:
+                self.sensor_data[sensor_id].pop(0)
+            # Update live reading label
             self.labels[sensor_id]["text"] = f"{sensor_id} Reading: {reading}"
 
-        # Update the plots with the latest sensor data.
+        # After updating sensor_data, refresh plots with the new data
         self.update_plots()
+
 
     def update_plots(self):
         """
-        Updates the plots with recent sensor data. This method should be
-        implemented to fetch recent data for each sensor and update the
-        corresponding subplot with that data.
+        Updates the plots with recent sensor data, assuming self.sensor_data
+        contains the latest N readings for each sensor.
         """
-        # Clear existing plots.
-        for ax in self.axs:
-            ax.clear()
+        # Example sensor data structure for clarity:
+        # self.sensor_data = {'CO': [0, 10, 20, ...], 'O2': [21, 22, 23, ...], 'Dust': [50, 40, 30, ...]}
 
-        # Example plotting logic (replace with actual data fetching and plotting)
-        # self.axs[0].plot(data_CO)
-        # self.axs[1].plot(data_O2)
-        # self.axs[2].plot(data_Dust)
-        # Re-draw the canvas to reflect updated plots.
+        sensor_ids = ['CO', 'O2', 'Dust']
+        for ax, sensor_id in zip(self.axs, sensor_ids):
+            ax.clear()  # Clear existing plot
+            ax.plot(self.sensor_data[sensor_id], label=sensor_id)  # Plot new data
+            ax.legend(loc="upper left")
+            ax.set_ylabel(f"{sensor_id}")
+            # Optionally, set ax.set_ylim([min_value, max_value]) based on sensor's expected range
+
+        self.axs[-1].set_xlabel("Time (s)")
         self.canvas.draw()
+
 
 if __name__ == "__main__":
     root = tk.Tk()
