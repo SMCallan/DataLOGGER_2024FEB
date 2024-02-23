@@ -12,11 +12,13 @@ class GUIManager:
         self.data_logger = data_logger
         self.alarm_manager = alarm_manager
         
+        # Define update_interval before setup_ui to avoid AttributeError
+        self.update_interval = 1000  # milliseconds for updating sensor readings and plots
+        
         # Initialize a dictionary to store recent sensor data for plotting
         self.sensor_data = {'CO': [], 'O2': [], 'Dust': []}
         
         self.setup_ui()
-        self.update_interval = 1000  # Update interval in milliseconds
 
     def setup_ui(self):
         """Sets up the user interface components for the application."""
