@@ -42,17 +42,16 @@ class GUIManager:
         self.labels = {sensor_id: ttk.Label(self.reading_frame, text=f"{sensor_id} Reading: 0") for sensor_id in ["CO", "O2", "Dust"]}
         for label in self.labels.values():
             label.pack(pady=10)
-            
-        generate_report_btn = ttk.Button(self.reading_frame, text="Generate     Report", command=self.generate_report)
+        
+        generate_report_btn = ttk.Button(self.reading_frame, text="Generate Report", command=self.generate_report)
         generate_report_btn.pack(pady=10)
-
         
         self.start_auto_update()
 
     def generate_report(self):
         """Generates a report of average sensor readings."""
         self.data_logger.generate_average_report()
-        tk.messagebox.showinfo("Report Generated", "The average sensor readings report has been generated.")
+        messagebox.showinfo("Report Generated", "The average sensor readings report has been generated.")
 
     def start_auto_update(self):
         """Begins the process of automatically updating sensor readings and plots."""
@@ -75,7 +74,7 @@ class GUIManager:
         self.update_plots()
 
     def update_plots(self):
-        # Assuming self.sensor_data contains the recent data for each sensor
+        """Updates the plots with recent sensor data."""
         sensor_ranges = {'CO': (0, 1000), 'O2': (0, 25), 'Dust': (0, 100)}  # Define correct ranges for each sensor
         
         for ax, sensor_id in zip(self.axs, ["CO", "O2", "Dust"]):
@@ -88,16 +87,12 @@ class GUIManager:
         self.axs[-1].set_xlabel("Time (s)")
         self.canvas.draw()
 
-    
-    self.axs[-1].set_xlabel("Time (s)")
-    self.canvas.draw()
-
 if __name__ == "__main__":
     root = tk.Tk()
     root.geometry("800x600")
-    # Make sure to define and initialize SensorManager, DataLogger, and AlarmManager before using them
-    sensor_manager = SensorManager()  # Placeholder: Initialize with your SensorManager
-    data_logger = DataLogger()  # Placeholder: Initialize with your DataLogger
-    alarm_manager = AlarmManager()  # Placeholder: Initialize with your AlarmManager
+    # Initialize SensorManager, DataLogger, and AlarmManager with actual instances
+    sensor_manager = SensorManager()
+    data_logger = DataLogger()
+    alarm_manager = AlarmManager()
     app = GUIManager(root, sensor_manager, data_logger, alarm_manager)
     root.mainloop()
