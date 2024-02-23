@@ -2,6 +2,7 @@
 
 import tkinter as tk
 from tkinter import ttk
+import tkinter.messagebox as messagebox
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.figure import Figure
 
@@ -41,8 +42,17 @@ class GUIManager:
         self.labels = {sensor_id: ttk.Label(self.reading_frame, text=f"{sensor_id} Reading: 0") for sensor_id in ["CO", "O2", "Dust"]}
         for label in self.labels.values():
             label.pack(pady=10)
+            
+        generate_report_btn = ttk.Button(self.reading_frame, text="Generate     Report", command=self.generate_report)
+        generate_report_btn.pack(pady=10)
+
         
         self.start_auto_update()
+
+    def generate_report(self):
+        """Generates a report of average sensor readings."""
+        self.data_logger.generate_average_report()
+        tk.messagebox.showinfo("Report Generated", "The average sensor readings report has been generated.")
 
     def start_auto_update(self):
         """Begins the process of automatically updating sensor readings and plots."""
@@ -65,15 +75,22 @@ class GUIManager:
         self.update_plots()
 
     def update_plots(self):
-        """Updates the plots with recent sensor data."""
+        # Assuming self.sensor_data contains the recent data for each sensor
+        sensor_ranges = {'CO': (0, 1000), 'O2': (0, 25), 'Dust': (0, 100)}  # Define correct ranges for each sensor
+        
         for ax, sensor_id in zip(self.axs, ["CO", "O2", "Dust"]):
             ax.clear()
             ax.plot(self.sensor_data[sensor_id], label=sensor_id)
             ax.legend(loc="upper left")
-            ax.set_ylabel(sensor_id)
+            ax.set_ylabel(f"{sensor_id}")
+            ax.set_ylim(sensor_ranges[sensor_id])  # Set y-axis limits based on sensor ranges
         
         self.axs[-1].set_xlabel("Time (s)")
         self.canvas.draw()
+
+    
+    self.axs[-1].set_xlabel("Time (s)")
+    self.canvas.draw()
 
 if __name__ == "__main__":
     root = tk.Tk()
