@@ -1,11 +1,10 @@
 import tkinter as tk
-from tkinter import Frame, TOP, LEFT, X, BOTH, SUNKEN, BOTTOM
+from tkinter import Frame, TOP, LEFT, X, BOTH, SUNKEN, BOTTOM, messagebox
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.figure import Figure
 import os
 
-# Importing your SensorManager, DataLogger, and AlarmManager
-# This assumes these classes are defined in their respective modules.
+# Assuming SensorManager, DataLogger, and AlarmManager are defined in their respective modules
 from sensor_manager import SensorManager
 from data_logger import DataLogger
 from alarm_manager import AlarmManager
@@ -44,7 +43,15 @@ class GUIManager:
         self.alarm_frame = Frame(self.root, bd=2, relief=SUNKEN)
         self.alarm_frame.pack(expand=True, side=BOTTOM, fill=BOTH)
 
-        # Add any additional UI setup here
+        # Add Generate Report button
+        self.generate_report_button = tk.Button(self.top_frame, text="Generate Report", command=self.on_generate_report_click)
+        self.generate_report_button.pack(side=tk.LEFT)
+
+    def on_generate_report_click(self):
+        # Call the generate_average_report method from the DataLogger instance
+        # Here, we pass 'minute' as an example. This can be changed to 'day' for daily averages.
+        self.data_logger.generate_average_report(interval='minute')
+        messagebox.showinfo("Report Generated", "The average report has been generated successfully.")
 
     def start_auto_update(self):
         self.update_sensor_readings()
@@ -69,5 +76,10 @@ class GUIManager:
 
 if __name__ == "__main__":
     root = tk.Tk()
-    app = GUIManager(root)
+    # Assuming the SensorManager, DataLogger, and AlarmManager instances are created and passed here correctly
+    sensor_manager = SensorManager()
+    data_logger = DataLogger()
+    alarm_manager = AlarmManager()
+    app = GUIManager(root, sensor_manager, data_logger, alarm_manager)
     root.mainloop()
+
