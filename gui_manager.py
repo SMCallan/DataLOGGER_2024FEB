@@ -1,8 +1,8 @@
+# FILENAME: gui_manager.py
 import tkinter as tk
 from tkinter import Frame, TOP, LEFT, X, BOTH, SUNKEN, BOTTOM, messagebox
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.figure import Figure
-import os
 
 # Assuming SensorManager, DataLogger, and AlarmManager are defined in their respective modules
 from sensor_manager import SensorManager
@@ -43,13 +43,10 @@ class GUIManager:
         self.alarm_frame = Frame(self.root, bd=2, relief=SUNKEN)
         self.alarm_frame.pack(expand=True, side=BOTTOM, fill=BOTH)
 
-        # Add Generate Report button
         self.generate_report_button = tk.Button(self.top_frame, text="Generate Report", command=self.on_generate_report_click)
         self.generate_report_button.pack(side=tk.LEFT)
 
     def on_generate_report_click(self):
-        # Call the generate_average_report method from the DataLogger instance
-        # Here, we pass 'minute' as an example. This can be changed to 'day' for daily averages.
         self.data_logger.generate_average_report(interval='minute')
         messagebox.showinfo("Report Generated", "The average report has been generated successfully.")
 
@@ -67,19 +64,20 @@ class GUIManager:
         self.plot.set_ylabel("Sensor Value")
         self.plot.set_title("Real-time Sensor Data Visualization")
 
+        sensor_ranges = {'CO': (0, 1000), 'O2': (0, 25), 'Dust': (0, 100)}
         for sensor_id, data in self.sensor_data.items():
             if data:  # Check if data list is not empty
-                self.plot.plot(data, label=sensor_id)
+                x_values = range(len(data))
+                self.plot.plot(x_values, data, label=sensor_id)
+                self.plot.set_ylim(sensor_ranges[sensor_id])
 
         self.plot.legend()
         self.canvas.draw()
 
 if __name__ == "__main__":
     root = tk.Tk()
-    # Assuming the SensorManager, DataLogger, and AlarmManager instances are created and passed here correctly
     sensor_manager = SensorManager()
     data_logger = DataLogger()
     alarm_manager = AlarmManager()
     app = GUIManager(root, sensor_manager, data_logger, alarm_manager)
     root.mainloop()
-
