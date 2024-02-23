@@ -1,101 +1,99 @@
 # Raspberry Pi Sensor Monitoring Project
 
-This project provides a comprehensive system for monitoring sensor data on a Raspberry Pi, displaying the readings in a graphical user interface (GUI), and logging the data for future analysis. It also includes an alarm management system that triggers alerts based on predefined sensor value thresholds or trends.
+This project is designed to offer a robust solution for real-time sensor monitoring on the Raspberry Pi, featuring a graphical user interface (GUI) for live data visualization, data logging capabilities for historical analysis, and an alarm system for threshold-based alerts. It's ideal for a wide range of applications, from environmental monitoring to home automation systems.
 
 ## Prerequisites
 
-Before you begin, ensure you have the following:
-- A Raspberry Pi set up with Raspbian (or any compatible Raspberry Pi OS).
-- Physical sensors connected to your Raspberry Pi. This project is configured for generic sensors, but specifics can be adjusted in the code.
-- An internet connection on your Raspberry Pi to download the necessary libraries.
+To run this project, you'll need:
+- A Raspberry Pi set up with the latest Raspberry Pi OS.
+- Compatible sensors connected to the Raspberry Pi. The project is pre-configured for CO, O2, and Dust sensors but can be adapted for others.
+- An active internet connection on your Raspberry Pi for library installations.
 
 ## Installation
 
-1. **Update your Raspberry Pi:**
+Follow these steps to prepare your environment:
+
+1. **Update and Upgrade your Raspberry Pi:**
 
     ```bash
     sudo apt-get update
     sudo apt-get upgrade
     ```
 
-2. **Install Python 3 and pip (if not already installed):**
+2. **Ensure Python 3 and pip are installed:**
+
+    Python 3 comes pre-installed on Raspberry Pi OS. Verify its installation with `python3 --version`. If needed, install pip:
 
     ```bash
-    sudo apt-get install python3 python3-pip
+    sudo apt-get install python3-pip
     ```
 
-3. **Install Required Python Libraries:**
+3. **Install Required Libraries:**
 
-    The project requires several Python libraries, including Tkinter for the GUI, Matplotlib for plotting, and Adafruit_ADS1x15 for ADC support.
+    - **Tkinter for GUI** (usually comes with Python 3):
 
-    - Tkinter (should be included with Python 3):
-    
         ```bash
         sudo apt-get install python3-tk
         ```
     
-    - Matplotlib:
+    - **Matplotlib for plotting sensor data**:
     
         ```bash
         pip3 install matplotlib
         ```
     
-    - Adafruit_ADS1x15 for ADC sensor reading:
+    - **Adafruit_ADS1x15 for analog-to-digital conversion**:
     
         ```bash
         pip3 install Adafruit-ADS1x15
         ```
     
-    - RPi.GPIO for GPIO pin control (should be pre-installed, but you can reinstall if necessary):
+    - **RPi.GPIO for GPIO control** (pre-installed but can be updated):
     
         ```bash
         pip3 install RPi.GPIO
         ```
 
-## Project Structure
+## Project Overview
 
-- `main.py`: The main script that initializes the GUI and starts the sensor monitoring and data logging. It sets up the sensor manager, data logger, alarm manager, and GUI manager. It also starts a separate thread for automatic data logging.
+- **`main.py`**: Initializes all managers (GUI, Sensor, Data Logger, Alarm) and starts the main application. It handles the creation of a separate thread for continuous data logging.
 
-- `config.py`: This file contains the configuration for your sensor system, including the mapping of sensors to their respective channels or pins, and settings for data logging and GUI update intervals.
+- **`config.py`**: Contains configurations such as sensor mappings to ADC channels or GPIO pins, data logging intervals, and GUI update frequencies.
 
-- `gui_manager.py`: This file defines the `GUIManager` class, which manages the graphical user interface for your application. It reads sensor data, updates the sensor data plot, and redraws the canvas.
+- **`gui_manager.py`**: Manages the application's GUI, displaying sensor data in real-time, updating plots, and facilitating user interactions like report generation.
 
-- `data_logger.py`: This file defines the `DataLogger` class, which logs sensor data to a CSV file.
+- **`data_logger.py`**: Responsible for logging sensor data into CSV files and generating reports that summarize sensor data over specified intervals.
 
-- `alarm_manager.py`: This class is responsible for checking alarms based on sensor data. It checks for over-threshold values and increasing trends in the sensor data. If any of these conditions are met, it adds an alarm message to the list of alarms, which it then returns.
+- **`alarm_manager.py`**: Evaluates sensor data against defined thresholds to identify and report alarm conditions.
 
-- `sensor_manager.py`: This class manages the sensors in your system. It initializes the ADC device for reading analog sensors and sets up the GPIO mode for digital sensor pins. It also loads sensor configurations from the settings in `config.py`. The `read_sensor` method reads and returns data from a specified sensor, and the `get_sensor_ids` method returns a list of all configured sensor IDs.
+- **`sensor_manager.py`**: Handles reading data from both analog and digital sensors, abstracting the hardware layer from the rest of the application.
 
-## Running the Project
+## Running the Application
 
-1. **Clone the project to your Raspberry Pi:**
+1. **Prepare Your Sensors:**
+   Ensure your sensors are connected to the Raspberry Pi as per the configurations defined in `config.py`.
 
-    Clone or download the project files to a directory on your Raspberry Pi.
-
-2. **Connect Your Sensors:**
-
-    Ensure your sensors are correctly connected to the Raspberry Pi. The default configuration uses GPIO pins and an ADS1115 ADC. Adjust `sensor_manager.py` as needed to match your sensor setup.
-
-3. **Launch the Application:**
-
-    Navigate to the project directory and run the following command to start the project:
+2. **Start the Application:**
+   Navigate to the project's directory and execute:
 
     ```bash
     python3 main.py
     ```
 
-    The GUI will start, displaying real-time sensor data and logging the readings to a CSV file.
+   This launches the GUI, showcasing live sensor data and starting the data logging process.
 
 ## Customization
 
-You can customize the project settings in `config.py`, such as sensor IDs, data logging interval, and GUI update interval. If you're using different sensors or additional hardware, you may need to adjust the `sensor_manager.py` accordingly.
+- **Sensor Configuration**: Modify `config.py` to match your specific sensor setup (types, channels, pins).
+- **Functionality Expansion**: Extend `sensor_manager.py` for additional sensors or `alarm_manager.py` for more complex alarm conditions.
+- **GUI Enhancements**: Adjust `gui_manager.py` to alter the GUI layout, themes, or add new UI elements.
 
 ## Troubleshooting
 
-- Ensure all libraries are correctly installed and up to date.
-- Check your sensor connections and configurations in `sensor_manager.py`.
-- If you encounter errors with the ADC or GPIO, verify that your Raspberry Pi has the correct permissions to access these resources.
+- **Library Issues**: Confirm all required libraries are installed. Reinstall any library if errors persist.
+- **Hardware Connectivity**: Check sensor connections and configurations if data is not appearing as expected.
+- **Permission Errors**: Ensure your Raspberry Pi user has the necessary permissions, especially for GPIO access.
 
 ---
 
-This README provides a general guide for setting up and running the Raspberry Pi Sensor Monitoring Project. You might need to adjust paths, library versions, or hardware configurations based on your specific setup and the sensors you are using.
+This README aims to guide you through setting up and customizing the Raspberry Pi Sensor Monitoring Project for your specific needs. Adaptations may be necessary based on your hardware setup, sensor types, and application requirements.
