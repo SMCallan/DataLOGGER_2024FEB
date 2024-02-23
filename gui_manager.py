@@ -1,5 +1,4 @@
 # FILENAME: gui_manager.py
-
 import tkinter as tk
 from tkinter import ttk
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
@@ -7,29 +6,21 @@ from matplotlib.figure import Figure
 
 class GUIManager:
     def __init__(self, root, sensor_manager, data_logger, alarm_manager):
-        """
-        Initialize the GUI Manager with references to the sensor manager,
-        data logger, and alarm manager, setting up the UI components and
-        starting the auto-update process for live sensor data visualization.
-
-        Args:
-            root (tk.Tk): The root window of the application.
-            sensor_manager (SensorManager): The sensor manager instance.
-            data_logger (DataLogger): The data logger instance.
-            alarm_manager (AlarmManager): The alarm manager instance.
-        """
         self.root = root
         self.sensor_manager = sensor_manager
         self.data_logger = data_logger
         self.alarm_manager = alarm_manager
-
+        
+        # Initialize a dictionary to store sensor data for plotting.
+        # This will hold the latest sensor readings.
+        self.sensor_data = {'CO': [], 'O2': [], 'Dust': []}
+        
         self.setup_ui()
-        self.update_interval = 1000  # Update interval in milliseconds for sensor data.
+        self.update_interval = 1000  # milliseconds for updating sensor readings and plots
 
     def setup_ui(self):
         """Sets up the user interface components for the application."""
         self.root.title("Sensor System Dashboard")
-
         # Create frames for the plots and live readings.
         self.plot_frame = ttk.Frame(self.root)
         self.plot_frame.grid(row=0, column=0, sticky="nsew")
@@ -56,12 +47,12 @@ class GUIManager:
         self.start_auto_update()
 
     def start_auto_update(self):
-        """Starts the automatic update process for sensor readings and plots."""
+        """Begins the process of automatically updating sensor readings and plots."""
         self.update_sensor_readings()
         self.root.after(self.update_interval, self.start_auto_update)
 
     def update_sensor_readings(self):
-        """
+                """
         Fetches the latest sensor readings, updates the live reading labels,
         and appends the new readings to self.sensor_data for plotting.
         """
@@ -78,15 +69,11 @@ class GUIManager:
         # After updating sensor_data, refresh plots with the new data
         self.update_plots()
 
-
     def update_plots(self):
-        """
+                """
         Updates the plots with recent sensor data, assuming self.sensor_data
         contains the latest N readings for each sensor.
         """
-        # Example sensor data structure for clarity:
-        # self.sensor_data = {'CO': [0, 10, 20, ...], 'O2': [21, 22, 23, ...], 'Dust': [50, 40, 30, ...]}
-
         sensor_ids = ['CO', 'O2', 'Dust']
         for ax, sensor_id in zip(self.axs, sensor_ids):
             ax.clear()  # Clear existing plot
@@ -97,13 +84,12 @@ class GUIManager:
 
         self.axs[-1].set_xlabel("Time (s)")
         self.canvas.draw()
-
+        self.canvas.draw()
 
 if __name__ == "__main__":
     root = tk.Tk()
     root.geometry("800x600")
-    # Ensure these classes (SensorManager, DataLogger, AlarmManager) are properly implemented.
-    sensor_manager = SensorManager()
+    sensor_manager = SensorManager()  # Ensure this class has necessary implementations
     data_logger = DataLogger()
     alarm_manager = AlarmManager()
     app = GUIManager(root, sensor_manager, data_logger, alarm_manager)
