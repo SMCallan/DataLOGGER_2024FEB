@@ -8,12 +8,24 @@ settings = {
         'Dust': {'type': 'analog', 'channel': 3},  # Dust sensor connected to ADC channel 3
     },
 
-    # Placeholder for calibration parameters; adjust as needed for actual calibration
     'sensor_calibration': {
-        'O2': {'offset': 0, 'slope': 1},
-        'CO': {'offset': 0, 'slope': 1},
-        'NOx': {'offset': 0, 'slope': 1},
-        'Dust': {'offset': 0, 'slope': 1},
+        # Example calibration parameters for 4-20mA sensors, assuming linear relationship
+        'O2': {
+            'min_mA': 4, 'max_mA': 20,
+            'min_measurement': 0, 'max_measurement': 25  # Assuming O2 is measured from 0% to 25%
+        },
+        'CO': {
+            'min_mA': 4, 'max_mA': 20,
+            'min_measurement': 0, 'max_measurement': 1000  # Assuming CO is measured from 0 to 1000 ppm
+        },
+        'NOx': {
+            'min_mA': 4, 'max_mA': 20,
+            'min_measurement': 0, 'max_measurement': 500  # Assuming NOx is measured from 0 to 500 ppm
+        },
+        'Dust': {
+            'min_mA': 4, 'max_mA': 20,
+            'min_measurement': 0, 'max_measurement': 100  # Assuming Dust is measured from 0 to 100 mg/m3
+        },
     },
 
     'data_logging_interval': 60,  # Data logging interval in seconds
