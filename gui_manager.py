@@ -1,5 +1,3 @@
-# FILENAME: gui_manager.py
-
 import tkinter as tk
 from tkinter import ttk
 import tkinter.messagebox as messagebox
@@ -13,36 +11,44 @@ class GUIManager:
         self.data_logger = data_logger
         self.alarm_manager = alarm_manager
         
-        # Define update_interval before setup_ui to avoid AttributeError
-        self.update_interval = 1000  # milliseconds for updating sensor readings and plots
+        # Set the update interval for sensor readings and plots (in milliseconds)
+        self.update_interval = 1000
         
         # Initialize a dictionary to store recent sensor data for plotting
-        self.sensor_data = {'CO': [], 'O2': [], 'Dust': []}
+        # Note: Adjust this dictionary if you add more sensors or change the existing ones
+        self.sensor_data = {'CO': [], 'O2': [], 'Dust': [], 'NOx': []}
         
         self.setup_ui()
 
     def setup_ui(self):
         """Sets up the user interface components for the application."""
         self.root.title("Sensor System Dashboard")
+        
+        # Plot frame setup
         self.plot_frame = ttk.Frame(self.root)
         self.plot_frame.grid(row=0, column=0, sticky="nsew")
         
+        # Reading frame setup
         self.reading_frame = ttk.Frame(self.root, width=200)
         self.reading_frame.grid(row=0, column=1, sticky="ns")
         
+        # Configure grid
         self.root.columnconfigure(0, weight=3)
         self.root.columnconfigure(1, weight=1)
         self.root.rowconfigure(0, weight=1)
         
-        self.figure = Figure(figsize=(5, 6), dpi=100)
-        self.axs = [self.figure.add_subplot(311), self.figure.add_subplot(312), self.figure.add_subplot(313)]
+        # Figure for plotting sensor data
+        self.figure = Figure(figsize=(5, 4), dpi=100)
+        self.axs = self.figure.subplots(4, 1)  # Create 4 subplots for 4 sensors
         self.canvas = FigureCanvasTkAgg(self.figure, master=self.plot_frame)
         self.canvas.get_tk_widget().pack(fill=tk.BOTH, expand=True)
         
-        self.labels = {sensor_id: ttk.Label(self.reading_frame, text=f"{sensor_id} Reading: 0") for sensor_id in ["CO", "O2", "Dust"]}
+        # Sensor reading labels
+        self.labels = {sensor_id: ttk.Label(self.reading_frame, text=f"{sensor_id} Reading: 0") for sensor_id in self.sensor_data}
         for label in self.labels.values():
             label.pack(pady=10)
         
+        # Report generation button
         generate_report_btn = ttk.Button(self.reading_frame, text="Generate Report", command=self.generate_report)
         generate_report_btn.pack(pady=10)
         
@@ -60,29 +66,26 @@ class GUIManager:
 
     def update_sensor_readings(self):
         """Fetches the latest readings from sensors and updates the UI accordingly."""
-        for sensor_id in ["CO", "O2", "Dust"]:
-            reading = self.sensor_manager.read_sensor(sensor_id)
+        for sensor_id in self.sensor_data:
+            reading = self.sensor_manager.read_sensor(sensor_id)  # Assume this returns the raw data for now
             self.sensor_data[sensor_id].append(reading)
             
             # Update the label with the latest reading
             self.labels[sensor_id]["text"] = f"{sensor_id} Reading: {reading}"
             
-            # Optional: Trim the sensor data list to keep the UI responsive
-            if len(self.sensor_data[sensor_id]) > 50:  # Keep the last 50 readings
+            # Keep the last 50 readings to maintain UI responsiveness
+            if len(self.sensor_data[sensor_id]) > 50:
                 self.sensor_data[sensor_id] = self.sensor_data[sensor_id][-50:]
         
         self.update_plots()
 
     def update_plots(self):
         """Updates the plots with recent sensor data."""
-        sensor_ranges = {'CO': (0, 1000), 'O2': (0, 25), 'Dust': (0, 100)}  # Define correct ranges for each sensor
-        
-        for ax, sensor_id in zip(self.axs, ["CO", "O2", "Dust"]):
+        for ax, (sensor_id, data) in zip(self.axs, self.sensor_data.items()):
             ax.clear()
-            ax.plot(self.sensor_data[sensor_id], label=sensor_id)
+            ax.plot(data, label=sensor_id)
             ax.legend(loc="upper left")
-            ax.set_ylabel(f"{sensor_id}")
-            ax.set_ylim(sensor_ranges[sensor_id])  # Set y-axis limits based on sensor ranges
+            ax.set_ylabel(sensor_id)
         
         self.axs[-1].set_xlabel("Time (s)")
         self.canvas.draw()
@@ -90,7 +93,8 @@ class GUIManager:
 if __name__ == "__main__":
     root = tk.Tk()
     root.geometry("800x600")
-    # Initialize SensorManager, DataLogger, and AlarmManager with actual instances
+    # Dummy classes for SensorManager, DataLogger, and AlarmManager
+    # Replace these with actual instances of your classes
     sensor_manager = SensorManager()
     data_logger = DataLogger()
     alarm_manager = AlarmManager()
