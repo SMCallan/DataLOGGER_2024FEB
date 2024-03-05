@@ -1,4 +1,3 @@
-Based on your request to focus on the core functionality of your Raspberry Pi Sensor Monitoring Project, emphasizing the concurrency (tasks it performs), along with details of the hardware and software modules, here's a revised version of the README that captures the essence of how your project operates:
 
 ---
 
@@ -41,5 +40,3 @@ This project excels in its ability to manage multiple sensors and tasks simultan
 Leveraging high-quality hardware components like the ADS1115 ADC and the Raspberry Pi Display, the system not only captures precise environmental data but also presents it in an accessible manner, ensuring that critical information is always at the fingertips of the user. Whether for home automation, industrial monitoring, or research applications, this project stands as a testament to the versatility and power of combining modern hardware with sophisticated software architecture in environmental monitoring solutions.
 
 ---
-
-This version focuses on the core functionalities of your project, emphasizing how it performs and the concurrency of tasks, along with a brief overview of the hardware and software components involved. It avoids installation details, aiming to provide a clear understanding of the project's capabilities and operation.
